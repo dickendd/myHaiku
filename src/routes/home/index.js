@@ -3,8 +3,6 @@ import style from './style';
 
 var syllable = require('syllable');
 
-var exceptionWords = ['the', 'lyriope'];
-
 export default class Home extends Component {
 	constructor(props) {
 		super(props);
@@ -14,8 +12,10 @@ export default class Home extends Component {
 			line2: '',
 			line3: '',
 			currentLine: 1,
+			syllables: 0,
 		};
 
+		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.reset = this.reset.bind(this);
@@ -27,6 +27,17 @@ export default class Home extends Component {
 			line2: '',
 			line3: '',
 			currentLine: 1,
+			syllables: 0,
+		});
+	}
+
+	handleKeyUp(event) {
+		var lineText = event.target.value;
+		var syllables = syllable(lineText);
+
+		this.setState({
+			[event.target.name]: lineText,
+			syllables: syllables,
 		});
 	}
 
@@ -58,39 +69,54 @@ export default class Home extends Component {
 		}
 	}
 
-	render({}, {line1, line2, line3, currentLine}) {
+	render({}, {line1, line2, line3, currentLine, syllables}) {
 
 		let input = null;
 
 		switch(currentLine) {
 			case 1:
+				var targetSyllables = 5;
 				input = <div><label for="line1">
-							First Line:<br />
+							First Line:
+							<span style={{ color: syllables > targetSyllables ? 'red' : ''}}>{syllables}</span><br />
 							<input type="text"
 							name="line1"
+							data-syllables={targetSyllables}
+							onKeyUp={this.handleKeyUp}
 							onChange={this.handleChange}
-							value={this.state.line1} />
-						</label>
+							value={this.state.line1}
+							class="large-text-input" />
+						</label>&nbsp;
 						<input type="submit" value="Submit"/></div>;
 				break;
 			case 2:
+				var targetSyllables = 7;
 				input = <div><label for="line2">
-							Second Line:<br />
+							Second Line:
+							<span style={{ color: syllables > targetSyllables ? 'red' : ''}}>{syllables}</span><br />
 							<input type="text"
 							name="line2"
+							data-syllables={targetSyllables}
+							onKeyUp={this.handleKeyUp}
 							onChange={this.handleChange}
-							value={this.state.line2} />
-						</label>
+							value={this.state.line2}
+							class="large-text-input" />
+						</label>&nbsp;
 						<input type="submit" value="Submit"/></div>;
 				break;
 			case 3:
+				var targetSyllables = 5;
 				input = <div><label for="line3">
-							Third Line:<br />
+							Third Line:
+							<span style={{ color: syllables > targetSyllables ? 'red' : ''}}>{syllables}</span><br />
 							<input type="text"
 							name="line3"
+							data-syllables={targetSyllables}
+							onKeyUp={this.handleKeyUp}
 							onChange={this.handleChange}
-							value={this.state.line3} />
-						</label>
+							value={this.state.line3}
+							class="large-text-input" />
+						</label>&nbsp;
 						<input type="submit" value="Submit"/></div>;
 				break;
 		}
